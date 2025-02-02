@@ -1,0 +1,52 @@
+1. Initial Setup :
+        - .NET 8.0 (https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+        - PostgreSQl DB installation and running (https://www.devart.com/dbforge/postgresql/how-to-install-postgresql-on-macos/)
+            - UserName : postgres
+            - Password: Lipi@9040
+            - Port : 5433
+        
+2. Implement Step-by-Step :
+    - Step 1: Set Up Core Infrastructure :
+        - Install Necessary Packages: Run the  commands to add the core dependencies which is present in Libraries.txt file.
+        - Create Database Context in : ApplicationDbContext.cs
+        - Configure Database Connection : Program.cs
+        - Add Connection String : appsettings.json
+        - Run Migrations:
+            - dotnet ef migrations add AddProductOrderRelationship --output-dir Infrastructure/Persistence/Migrations
+            - dotnet ef database update
+
+
+    - Step 2: Build the Domain Layer :
+       
+        - Create Domain Models: 
+            - Product.cs
+            - Order.cs
+            -Customer.cs
+            
+        - Add Fluent API Configuration:
+            - ProductConfig.cs
+            - OrderConfig.cs
+            - CustomerConfig.cs
+            
+    - Step 3: Add Business Logic :
+        - Add CQRS Commands and Queries :
+                - AddProductCommand
+                - AddProductHandler
+                
+    - Step 4: Create the API Layer :
+        - Create Product Controller :
+            - ProductsController.cs
+    
+    - Step 5: Add Logging and Validation :
+        - Configure Serilog
+            - Program.cs  
+        - Add FluentValidation :
+            - AddProductValidator.cs      
+    
+    - Step 6: Implement Messaging, Redis, and Resilience :
+    
+    - Step 7: Write Tests
+    
+                    
+        
+   

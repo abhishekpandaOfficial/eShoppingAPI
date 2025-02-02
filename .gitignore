@@ -1,0 +1,35 @@
+# Ignore Rider/IntelliJ IDEA project files
+.idea/
+
+# Ignore build output directories
+bin/
+obj/
+
+# Ignore sensitive configuration files
+appsettings.json
+appsettings.Development.json
+
+# Ignore Visual Studio/Rider project and solution files
+#eShopping.API.csproj
+#eShopping.API.sln
+#eShopping.API.sln.DotSettings.user
+
+# Ignore global .NET SDK version
+global.json
+
+# Ignore unnecessary HTTP file
+eShopping.API.http
+
+# Ignore source code directories if not needed in version control
+#API/
+#Application/
+#Common/
+#Documents/
+#Domain/
+#Infrastructure/
+#Properties/
+#Tests/
+
+# Optional: To ignore all files except .gitignore itself
+# *
+# !.gitignore

@@ -1,0 +1,15 @@
+Summary of the Models:
+Product Model: 
+    Represents the product entity with properties like Id, Name, Description, and Price. It also includes a navigation property Orders to link it with the Order entity (one-to-many relationship).
+
+Order Model:
+    Represents the order entity with properties like Id, OrderDate, ProductId, Quantity, and TotalAmount. It has foreign keys to both Product and Customer, and navigation properties for both.
+
+Customer Model: 
+    Represents the customer entity with properties like Id, Name, Email, and PhoneNumber. It includes a collection of Orders to represent the orders placed by the customer.
+
+This setup ensures that:
+
+    -   Product can be related to multiple Orders.
+    -   Customer can place multiple Orders.
+    -   The Order entity is correctly related to both Product and Customer.

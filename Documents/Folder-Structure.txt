@@ -1,0 +1,146 @@
+
+eShoppingAPI/
+    │
+    ├── Application/          # Contains CQRS handlers, DTOs, and application services
+    ├── Domain/               # Contains domain models, aggregates, and business logic
+    ├── Infrastructure/       # Contains database access, migrations, external services
+    ├── API/                  # Entry point for the application (controllers, configurations)
+    ├── Tests/                # Unit, integration, and functional tests
+    └── Common/               # Shared utilities, constants, and base classes
+
+-------------------------------------------------------------------------------------------------------------------------------------
+1. Application :
+    - Responsible for implementing the CQRS pattern, DTOs, and application-specific logic.
+    
+            Application/
+            ├── Features/
+            │   ├── Products/               # Product-specific commands and queries
+            │   │   ├── Commands/
+            │   │   │   ├── AddProductCommand.cs
+            │   │   │   ├── UpdateProductCommand.cs
+            │   │   │   ├── DeleteProductCommand.cs
+            │   │   │   └── Handlers/
+            │   │   │       ├── AddProductHandler.cs
+            │   │   │       ├── UpdateProductHandler.cs
+            │   │   │       └── DeleteProductHandler.cs
+            │   │   ├── Queries/
+            │   │   │   ├── GetProductsQuery.cs
+            │   │   │   └── Handlers/
+            │   │   │       ├── GetProductsHandler.cs
+            │   │   │       └── GetProductByIdHandler.cs
+            ├── Interfaces/               # Interfaces for services
+            │   ├── IProductService.cs
+            │   └── IOrderService.cs
+            ├── DTOs/                     # Data Transfer Objects
+            │   ├── ProductDTO.cs
+            │   └── OrderDTO.cs
+            └── Behaviors/                # Middleware for validation, logging, etc.
+                ├── ValidationBehavior.cs
+                ├── LoggingBehavior.cs
+                └── CachingBehavior.cs
+-------------------------------------------------------------------------------------------------------------------------------------
+2. Domain :
+    - Contains the core business logic, models, and aggregates.
+    
+            Domain/
+            ├── Entities/
+            │   ├── Product.cs
+            │   ├── Order.cs
+            │   └── Customer.cs
+            ├── ValueObjects/             # Immutable value objects
+            │   ├── Money.cs
+            │   └── Address.cs
+            ├── Exceptions/               # Domain-specific exceptions
+            │   ├── ProductNotFoundException.cs
+            │   └── OrderValidationException.cs
+            └── Services/                 # Domain services
+                ├── OrderService.cs
+                └── PricingService.cs
+-------------------------------------------------------------------------------------------------------------------------------------
+3. Infrastructure :
+    - Handles database interaction, migrations, external services, and configurations.
+    
+            Infrastructure/
+            ├── Persistence/
+            │   ├── DbContext/
+            │   │   ├── ApplicationDbContext.cs
+            │   │   ├── Configurations/        # Fluent API configurations
+            │   │   │   ├── ProductConfig.cs
+            │   │   │   └── OrderConfig.cs
+            │   │   └── SeedData.cs
+            │   ├── Migrations/               # EF Core migrations
+            │   │   ├── 20230202_InitialCreate.cs
+            │   │   ├── 20230202_SeedProducts.cs
+            │   │   └── ModelSnapshot.cs
+            │   └── Repositories/            # Repository pattern implementation
+            │       ├── ProductRepository.cs
+            │       └── OrderRepository.cs
+            ├── Messaging/
+            │   ├── RabbitMQ/
+            │   │   ├── MessageBus.cs
+            │   │   └── EventHandlers/
+            │   │       ├── ProductCreatedHandler.cs
+            │   │       └── OrderCompletedHandler.cs
+            │   ├── MassTransitConfig.cs
+            ├── Redis/
+            │   └── RedisCacheService.cs
+            ├── Polly/
+            │   └── ResiliencePolicies.cs
+            └── Identity/
+                ├── IdentityConfig.cs
+                ├── JwtTokenService.cs
+                └── ApplicationUser.cs
+-------------------------------------------------------------------------------------------------------------------------------------
+4. API :
+    - The entry point for the application, containing controllers, middleware, and configurations.
+    
+            API/
+            ├── Controllers/
+            │   ├── ProductsController.cs
+            │   ├── OrdersController.cs
+            │   └── CustomersController.cs
+            ├── Middlewares/
+            │   ├── ExceptionHandlingMiddleware.cs
+            │   ├── RequestLoggingMiddleware.cs
+            │   └── AuthenticationMiddleware.cs
+            ├── Filters/
+            │   ├── ValidationFilter.cs
+            │   └── AuthorizationFilter.cs
+            ├── Program.cs
+            └── Startup.cs
+-------------------------------------------------------------------------------------------------------------------------------------
+5. Tests :
+    - Contains unit, integration, and functional tests.
+    
+            Tests/
+            ├── UnitTests/
+            │   ├── Application/
+            │   │   ├── Products/
+            │   │   │   ├── AddProductCommandHandlerTests.cs
+            │   │   │   └── UpdateProductCommandHandlerTests.cs
+            │   │   ├── Orders/
+            │   │   └── Customers/
+            │   ├── Domain/
+            │       ├── ProductTests.cs
+            │       └── OrderTests.cs
+            ├── IntegrationTests/
+            │   ├── ProductIntegrationTests.cs
+            │   └── OrderIntegrationTests.cs
+            └── FunctionalTests/
+                ├── ProductControllerTests.cs
+                └── OrderControllerTests.cs
+-------------------------------------------------------------------------------------------------------------------------------------
+6. Common :
+    - Contains shared utilities and constants.
+    
+            Common/
+            ├── Utilities/
+            │   ├── DateTimeProvider.cs
+            │   ├── HashingService.cs
+            │   └── EmailService.cs
+            ├── Constants/
+            │   ├── ErrorMessages.cs
+            │   └── ValidationRules.cs
+            └── Extensions/
+                ├── MiddlewareExtensions.cs
+                └── ServiceCollectionExtensions.cs

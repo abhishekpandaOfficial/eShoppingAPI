@@ -1,0 +1,31 @@
+Services to Build
+==================
+    Product Service :
+        - Handles product creation, updates, retrievals, and deletions.
+    
+    Order Service :
+        - Manages orders, including processing and payment handling.
+    
+    Customer Service :
+        - Manages customer accounts and profiles.
+    
+    Authentication Service :
+        - Handles user authentication, token generation, and role-based access.
+    
+    Messaging Service :
+        - Manages message queues (e.g., RabbitMQ with MassTransit).
+    
+    Caching Service :
+        - Implements distributed caching using Redis.
+    
+    Validation Service :
+        - Implements validation using FluentValidation.
+    
+    Logging Service :
+        - Centralized logging with Serilog.
+    
+    Resilience Service :
+        - Handles retries, circuit breakers, and fault tolerance using Polly.
+    
+    gRPC Communication Service :
+        - Facilitates inter-service communication.
