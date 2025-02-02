@@ -1,5 +1,4 @@
 using eShopping.API.Application.Features.Products.Commands.Handlers;
-using eShopping.API.Application.Features.Products.Commands.Validators;
 using eShopping.API.Infrastructure.Persistence.DbContext;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
