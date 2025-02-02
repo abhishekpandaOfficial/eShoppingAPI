@@ -1,4 +1,5 @@
 using eShopping.API.Domain.Entities;
+using eShopping.API.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace eShopping.API.Infrastructure.Persistence.DbContext;
@@ -21,14 +22,14 @@ public class SeedData
                         Id = Guid.NewGuid(),
                         Name = "Product 1",
                         Description = "Description of Product 1",
-                        Price = 99.99m
+                        Price = new Money(99.99m, "INR")
                     },
                     new Product
                     {
                         Id = Guid.NewGuid(),
                         Name = "Product 2",
                         Description = "Description of Product 2",
-                        Price = 199.99m
+                        Price = new Money(199.99m, "INR")
                     });
 
                 context.SaveChanges();
@@ -36,6 +37,7 @@ public class SeedData
 
             // Seed data for Customers
             if (!context.Customers.Any())
+                
             {
                 context.Customers.AddRange(
                     new Customer

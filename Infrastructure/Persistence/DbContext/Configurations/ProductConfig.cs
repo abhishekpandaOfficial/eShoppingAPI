@@ -21,9 +21,11 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Description)
             .HasMaxLength(500);
 
-        // Configuring the Price property (required with precision)
-        builder.Property(p => p.Price)
-            .HasPrecision(18, 2)
-            .IsRequired();
+        // Configure Money as an owned type here within Product
+        builder.OwnsOne(p => p.Price, price =>
+        {
+            price.Property(p => p.Amount).HasColumnName("Amount").HasColumnType("decimal(18,2)").IsRequired();
+            price.Property(p => p.Currency).HasColumnName("Currency").HasMaxLength(3).IsRequired();
+        });
     }
 }
