@@ -1,39 +1,46 @@
+using eShopping.API.Application.Features.DTOs;
+using eShopping.API.Application.Features.Interfaces;
 using eShopping.API.Domain.ValueObjects;
 using eShopping.API.Infrastructure.Persistence.DbContext;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace eShopping.API.Application.Features.Products.Commands.Handlers;
 
-public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, bool>
+public class UpdateProductHandler : IRequestHandler<UpdateProductCommand,bool>
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IProductService _productService;
+    private readonly IValidator<ProductDTO> _productValidator;
 
-    public UpdateProductHandler(ApplicationDbContext context)
+    public UpdateProductHandler(IProductService productService, IValidator<ProductDTO> productValidator)
     {
-        _context = context;
+        _productService = productService;
+        _productValidator = productValidator;
+        
     }
 
     public async Task<bool> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        // Fetch the product from the database
-        var product = await _context.Products
-            .FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
-
-        if (product == null)
+        // Validate product DTO
+        var validationResult = await _productValidator.ValidateAsync(request.Product, cancellationToken);
+        if (!validationResult.IsValid)
         {
-            // Product not found
+            // Optionally, throw an exception or return false indicating failure
             return false;
         }
 
-        // Update product properties
-        product.Name = request.Name;
-        product.Description = request.Description;
-        product.Price = new Money(request.Amount, request.Currency);  // Update the price with the new Money object
-
-        // Save changes to the database
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return true;
+        try
+        {
+            // Attempt to update product
+            await _productService.UpdateProductAsync(request.Product);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // Handle any potential error during the update operation
+            // Log the error, return false, or throw a custom exception
+            return false;
+        }
     }
 }

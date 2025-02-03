@@ -1,0 +1,51 @@
+
+User Interaction → API → Application Layer → Domain Layer → Infrastructure Layer → Database/External Services
+
+Detailed Workflow:
+1. User Browses Products:
+   User → API (ProductsController.GetProducts) → Application Layer (GetProductsQuery & Handler) → Infrastructure Layer (ProductRepository → Database) → API (Return Product List)
+
+2. User Views Product Details:
+   User → API (ProductsController.GetProductById) → Application Layer (GetProductByIdQuery & Handler) → Infrastructure Layer (ProductRepository → Database) → API (Return Product Details)
+
+3. User Adds Product to Cart:
+   User → API (CartController.AddToCart) → Application Layer (AddToCartCommand & Handler) → Domain Layer (Product.UpdateStock → Cart.AddItem) → Infrastructure Layer (Update Database) → API (Confirmation)
+
+4. User Places an Order:
+   User → API (OrdersController.CreateOrder) → Application Layer (CreateOrderCommand & Handler) → Domain Layer (Order.Validations) → Infrastructure Layer (OrderRepository → Database) → RabbitMQ (Publish OrderCreated Event) → API (Order Confirmation)
+
+5. Payment Processing:
+   User → API (PaymentsController.ProcessPayment) → Application Layer (ProcessPaymentCommand & Handler) → Domain Layer (Validation) → Infrastructure Layer (Payment Gateway) → API (Payment Confirmation)
+
+6. Order Fulfillment:
+   RabbitMQ (OrderCreated Event) → Infrastructure Layer (OrderFulfillmentHandler) → External Services (Shipping/Inventory) → Domain Layer (Update Order Status) → Infrastructure Layer (Update Database)
+
+7. User Views Order History:
+   User → API (OrdersController.GetCustomerOrders) → Application Layer (GetCustomerOrdersQuery & Handler) → Infrastructure Layer (OrderRepository → Database) → API (Return Order History)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Product Browsing:
+   User → API → Application Layer → Infrastructure → Database → API → User
+
+2. Product Details:
+   User → API → Application Layer → Infrastructure → Database → API → User
+
+3. Add to Cart:
+   User → API → Application Layer → Domain Layer → Infrastructure → Database → API → User
+
+4. Place Order:
+   User → API → Application Layer → Domain Layer → Infrastructure → Database
+                              ↓
+                        RabbitMQ Event
+                              ↓
+                      External Services
+
+5. Payment:
+   User → API → Application Layer → Infrastructure (Payment Gateway) → Database → API → User
+
+6. Fulfillment:
+   RabbitMQ Event → Infrastructure → Domain → External Services → Infrastructure → Database
+
+7. Order History:
+   User → API → Application Layer → Infrastructure → Database → API → User

@@ -2,7 +2,7 @@ using MediatR;
 
 namespace eShopping.API.Application.Features.Products.Commands;
 
-public class DeleteProductCommand:IRequest<bool>
+public class DeleteProductCommand:IRequest
 {
     public Guid ProductId { get; set; }
 

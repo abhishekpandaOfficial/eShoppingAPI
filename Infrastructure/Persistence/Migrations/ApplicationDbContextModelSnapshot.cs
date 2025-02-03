@@ -95,6 +95,10 @@ namespace eShopping.API.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Amount");
+
                     b.HasKey("Id");
 
                     b.ToTable("Products");
@@ -158,35 +162,6 @@ namespace eShopping.API.Infrastructure.Persistence.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("eShopping.API.Domain.Entities.Product", b =>
-                {
-                    b.OwnsOne("eShopping.API.Domain.ValueObjects.Money", "Price", b1 =>
-                        {
-                            b1.Property<Guid>("ProductId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<decimal>("Amount")
-                                .HasColumnType("decimal(18,2)")
-                                .HasColumnName("Amount");
-
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("character varying(3)")
-                                .HasColumnName("Currency");
-
-                            b1.HasKey("ProductId");
-
-                            b1.ToTable("Products");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductId");
-                        });
-
-                    b.Navigation("Price")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("eShopping.API.Domain.Entities.Customer", b =>
