@@ -1,36 +1,36 @@
-using eShopping.API.Infrastructure.Persistence.DbContext;
+using eShopping.API.Application.Features.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace eShopping.API.Application.Features.Products.Commands.Handlers;
-
-public class DeleteProductHandler: IRequestHandler<DeleteProductCommand, bool>
+namespace eShopping.API.Application.Features.Products.Commands.Handlers
 {
-    private readonly ApplicationDbContext _context;
-
-    public DeleteProductHandler(ApplicationDbContext context)
+    public class DeleteProductHandler : IRequestHandler<DeleteProductCommand>
     {
-        _context = context;
-    }
+        private readonly IProductService _productService;
 
-    public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
-    {
-        // Fetch the product from the database
-        var product = await _context.Products
-            .FirstOrDefaultAsync(p => p.Id == request.ProductId, cancellationToken);
-
-        if (product == null)
+        public DeleteProductHandler(IProductService productService)
         {
-            // Product not found
-            return false;
+            _productService = productService;
         }
 
-        // Remove the product from the database
-        _context.Products.Remove(product);
+        public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
+        {
+            // Check if the product exists in the database
+            var productExists = await _productService.ProductExistsAsync(request.ProductId);
 
-        // Save changes to the database
-        await _context.SaveChangesAsync(cancellationToken);
+            if (!productExists)
+            {
+                // If product doesn't exist, throw an exception
+                throw new KeyNotFoundException($"Product with Id {request.ProductId} not found.");
+            }
 
-        return true;
+            // Proceed with deletion if the product exists
+            await _productService.DeleteProductAsync(request.ProductId);
+            
+            // Return Unit.Value to indicate success
+            return Unit.Value;
+        }
     }
 }

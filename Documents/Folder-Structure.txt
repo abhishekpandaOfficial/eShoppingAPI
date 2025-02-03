@@ -7,7 +7,8 @@ eShoppingAPI/
     ├── API/                  # Entry point for the application (controllers, configurations)
     ├── Tests/                # Unit, integration, and functional tests
     └── Common/               # Shared utilities, constants, and base classes
-
+-------------------------------------------------------------------------------------------------------------------------------------
+WORK FLOW : ==> User Interaction → API → Application Layer → Domain Layer → Infrastructure Layer → Database/External Services
 -------------------------------------------------------------------------------------------------------------------------------------
 1. Application :
     - Responsible for implementing the CQRS pattern, DTOs, and application-specific logic.

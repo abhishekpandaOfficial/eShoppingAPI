@@ -23,12 +23,6 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Configure Money as an owned type
-        modelBuilder.Entity<Product>()
-            .OwnsOne(p => p.Price, price =>
-            {
-                price.Property<object>(m => m.Amount).HasColumnName("Amount").HasColumnType("decimal(18,2)").IsRequired();
-                price.Property(m => m.Currency).HasColumnName("Currency").HasMaxLength(3).IsRequired();
-            });
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }

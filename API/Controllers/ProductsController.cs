@@ -1,3 +1,4 @@
+using eShopping.API.Application.Features.DTOs;
 using eShopping.API.Application.Features.Products.Commands;
 using eShopping.API.Application.Features.Products.Queries;
 using eShopping.API.Domain.Entities;
@@ -8,7 +9,7 @@ namespace eShopping.API.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController :ControllerBase
+public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
     public ProductsController(IMediator mediator)
@@ -18,54 +19,82 @@ public class ProductsController :ControllerBase
     
     // GET: api/products
     [HttpGet]
-    public async Task<ActionResult<List<Product>>> GetProducts([FromQuery] GetProductsQuery query)
+    public async Task<ActionResult<List<ProductDTO>>> GetProducts()
     {
-        var products = await _mediator.Send(query);
-        return Ok(products);
+        var query = new GetProductsQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
     
     // GET: api/products/{id}
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult> GetProductById(Guid id)
+    public async Task<ActionResult<ProductDTO>> GetProductById(Guid id)
     {
-        var query = new GetProductByIdQuery(id);
-        var product = await _mediator.Send(query);
+        var query = new GetProductByIdQuery(id); // Pass the id to the constructor
+        var result = await _mediator.Send(query);
 
-        return Ok(product);
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
     }
+
     
+    // POST: api/products
     [HttpPost]
     public async Task<IActionResult> AddProduct([FromBody] AddProductCommand command)
     {
-        // Call MediatR to handle the AddProductCommand
         var productId = await _mediator.Send(command);
-
-        // Return the created product ID in the response
-        return CreatedAtAction(nameof(AddProduct), new { id = productId }, productId);
+        return CreatedAtAction(nameof(GetProductById), new { id = productId }, productId);
     }
     
-    [HttpPut("{productId}")]
-    public async Task<IActionResult> UpdateProduct(Guid productId, [FromBody] UpdateProductCommand command)
+    // PUT: api/product/update
+    [HttpPut]
+    public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO productDto)
     {
-        command.ProductId = productId;  // Set ProductId
-
-        var result = await _mediator.Send(command);
-        if (!result)
+        if (productDto == null)
         {
-            return NotFound("Product not found");
+            return BadRequest("Product data is required.");
         }
 
-        return Ok("Product updated successfully");
+        // Create UpdateProductCommand with the provided DTO
+        var command = new UpdateProductCommand(productDto);
+
+        // Send the command to MediatR for processing by the handler
+        bool result = await _mediator.Send(command);
+
+        // Return appropriate response based on the result
+        if (result)
+        {
+            return NoContent(); // 204 No Content (successful update)
+        }
+        else
+        {
+            return StatusCode(500, "An error occurred while updating the product.");
+        }
     }
-    [HttpDelete("{productId}")]
+    // DELETE: api/products/{productId}
+    [HttpDelete("{productId:guid}")]
     public async Task<IActionResult> DeleteProduct(Guid productId)
     {
-        var result = await _mediator.Send(new DeleteProductCommand(productId));
-        if (!result)
+        try
         {
+            // Sending the DeleteProductCommand to the mediator
+            await _mediator.Send(new DeleteProductCommand(productId));
+
+            // If no exception is thrown, it means the product was deleted successfully
+            return Ok("Product deleted successfully");
+        }
+        catch (KeyNotFoundException)
+        {
+            // If product is not found, return NotFound with a message
             return NotFound("Product not found");
         }
-
-        return Ok("Product deleted successfully");
+        catch (Exception ex)
+        {
+            // Log the exception if necessary and return a generic error response
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
+
 }

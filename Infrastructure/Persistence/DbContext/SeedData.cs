@@ -22,14 +22,14 @@ public class SeedData
                         Id = Guid.NewGuid(),
                         Name = "Product 1",
                         Description = "Description of Product 1",
-                        Price = new Money(99.99m, "INR")
+                        Price = 999.99M,
                     },
                     new Product
                     {
                         Id = Guid.NewGuid(),
                         Name = "Product 2",
                         Description = "Description of Product 2",
-                        Price = new Money(199.99m, "INR")
+                        Price = 1990.00M,
                     });
 
                 context.SaveChanges();

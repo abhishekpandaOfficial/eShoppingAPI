@@ -47,6 +47,8 @@
     
     - Step 7: Write Tests
     
-                    
+    
+    -------------------------------------------------------------------------------------------------------------------------------------
+             User Interaction → API → Application Layer → Domain Layer → Infrastructure Layer → Database/External Services       
         
    
